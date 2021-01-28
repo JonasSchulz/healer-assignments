@@ -1,27 +1,15 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import {Button, Paper, TableRow, TableHead, TableContainer, TableCell, TableBody, Table, TextField} from '@material-ui/core'
+import AddIcon from '@material-ui/icons/Add';
 import DeleteIcon from '@material-ui/icons/Delete';
+import { Player } from './Components/PlayerSelection';
 
 const useStyles = makeStyles({
     table: {
         minWidth: 650,
     },
 });
-
-enum Spec {
-    'Restoration Shaman',
-    'Discipline Priest',
-    'Holy Priest',
-    'Mistweaver Monk',
-    'Holy Paladin',
-    'Restoration Druid',
-}
-
-type Player = {
-    name: string
-    spec: Spec
-}
 
 type Ability = {
     name: string
@@ -43,15 +31,18 @@ const DeleteButton = ({onDelete}: DeleteButtonProps) => {
 
 const defaultAbility = {name: '', timer: ''}
 
-export const FightTable = () => {
+
+type FightTableProps = {
+    players: Player[]
+}
+export const FightTable = (props: FightTableProps) => {
+    const {players} = props
     const classes = useStyles();
 
-    const [players, setPlayers] = useState<Player[]>([])
     const [abilities, setAbilities] = useState<Ability[]>([])
     // const [assignments, setAssignments] = useState<Assignment[]>([])
     const [newAbility, setNewAbility] = useState<Ability>(defaultAbility)
 
-    const addPlayer = () => setPlayers([...players, {name: 'someone', spec: Spec['Discipline Priest']}]);
     const addAbility = () => {
         setAbilities([...abilities, newAbility])
         setNewAbility(defaultAbility)
@@ -66,17 +57,16 @@ export const FightTable = () => {
 
     return (
         <>
-            <Button onClick={addPlayer}>Add player</Button>
             <TableContainer component={Paper}>
                 <Table className={classes.table} aria-label="simple table">
                     <TableHead>
                         <TableRow>
                             <TableCell>Ability</TableCell>
-                            <TableCell align="right">Timer</TableCell>
+                            <TableCell>Timer</TableCell>
                             {players.map(({name, spec}) => (
                                 <>
-                                    <TableCell align="right">{name}</TableCell>
-                                    <TableCell align="right">{spec}</TableCell>
+                                    <TableCell>{name}</TableCell>
+                                    <TableCell>{spec}</TableCell>
                                 </>)
                             )}
                         </TableRow>
@@ -84,10 +74,10 @@ export const FightTable = () => {
                     <TableBody>
                         {abilities.map((row, index) => (
                             <TableRow key={index}>
-                                <TableCell align="right">{row.name}</TableCell>
-                                <TableCell align="right">{row.timer}</TableCell>
+                                <TableCell>{row.name}</TableCell>
+                                <TableCell>{row.timer}</TableCell>
                                 {players.map(player => (
-                                    <TableCell align="right" colSpan={2}>{getAssignment(player)}</TableCell>
+                                    <TableCell colSpan={2}>{getAssignment(player)}</TableCell>
                                 ))}
                                 <TableCell>
                                     <DeleteButton onDelete={() => removeAbility(index)}/>
@@ -95,9 +85,9 @@ export const FightTable = () => {
                             </TableRow>
                         ))}
                         <TableRow>
-                            <TableCell align="right"><TextField value={newAbility?.name} onChange={event => setNewAbility({...newAbility, name: event.target.value})} label="Name" /></TableCell>
-                            <TableCell align="right"><TextField value={newAbility?.timer} onChange={event => setNewAbility({...newAbility, timer: event.target.value})} label="Timer" /></TableCell>
-                            <Button onClick={addAbility}>Add ability</Button>
+                            <TableCell><TextField value={newAbility?.name} onChange={event => setNewAbility({...newAbility, name: event.target.value})} label="Name" /></TableCell>
+                            <TableCell><TextField value={newAbility?.timer} onChange={event => setNewAbility({...newAbility, timer: event.target.value})} label="Timer" /></TableCell>
+                            <TableCell><Button onClick={addAbility}><AddIcon/></Button></TableCell>
                         </TableRow>
                     </TableBody>
                 </Table>
