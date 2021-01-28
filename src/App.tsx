@@ -1,11 +1,11 @@
-import React from 'react';
-import { Button } from '@material-ui/core';
+import React from "react";
+import { FightTable } from './FightTable'
 
 const App = () => {
   return (
     <div>
       <header>
-        <Button color="primary">Hello World</Button>
+        <FightTable></FightTable>
       </header>
     </div>
   );
